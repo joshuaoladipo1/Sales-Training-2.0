@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Judgment Training Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .principle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .principle-card {
+            border: 2px solid #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .principle-card:hover {
+            border-color: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        
+        .principle-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+        
+        .principle-rule {
+            color: #444;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+        }
+        
+        .principle-why {
+            color: #666;
+            font-size: 0.85em;
+            font-style: italic;
+        }
+        
+        .scenario-context {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .buyer-line {
+            background: #dbeafe;
+            border-left: 4px solid #2563eb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .buyer-line-label {
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+        
+        .buyer-quote {
+            color: #1e3a8a;
+            font-style: italic;
+            font-size: 1.05em;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: background 0.3s ease;
+        }
+        
+        button:hover {
+            background: #1d4ed8;
+        }
+        
+        button:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+        
+        button.secondary {
+            background: #f1f5f9;
+            color: #334155;
+            border: 2px solid #cbd5e1;
+        }
+        
+        button.secondary:hover {
+            background: #e2e8f0;
+        }
+
+        button.ai-analyze {
+            background: #7c3aed;
+            margin-top: 20px;
+        }
+
+        button.ai-analyze:hover {
+            background: #6d28d9;
+        }
+
+        button.ai-analyze:disabled {
+            background: #cbd5e1;
+        }
+        
+        .feedback-box {
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 2px solid;
+        }
+        
+        .feedback-elite {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #166534;
+        }
+        
+        .feedback-developing {
+            background: #fef3c7;
+            border-color: #eab308;
+            color: #854d0e;
+        }
+        
+        .feedback-average {
+            background: #fee2e2;
+            border-color: #dc2626;
+            color: #991b1b;
+        }
+        
+        .feedback-grade {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .feedback-detail {
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            font-size: 0.95em;
+        }
+        
+        .feedback-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .feedback-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .comparison-box {
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid;
+        }
+        
+        .comparison-average {
+            background: #fee2e2;
+            border-color: #dc2626;
+        }
+        
+        .comparison-elite {
+            background: #dcfce7;
+            border-color: #16a34a;
+        }
+        
+        .comparison-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .comparison-text {
+            font-size: 0.9em;
+            font-style: italic;
+        }
+        
+        .insight-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .insight-label {
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+        
+        .insight-text {
+            color: #444;
+            font-size: 0.95em;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .label {
+            display: block;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            margin-top: 20px;
+        }
+        
+        .helper-text {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        
+        .focus-banner {
+            background: #dbeafe;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2563eb;
+        }
+        
+        .focus-label {
+            font-weight: bold;
+            color: #1e40af;
+        }
+
+        .ai-analysis-box {
+            background: #f5f3ff;
+            border: 2px solid #7c3aed;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .ai-analysis-header {
+            font-weight: bold;
+            color: #5b21b6;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-section {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 3px solid #7c3aed;
+        }
+
+        .ai-section-title {
+            font-weight: bold;
+            color: #5b21b6;
+            margin-bottom: 10px;
+        }
+
+        .ai-section-content {
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f4f6;
+            border-top-color: #7c3aed;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Sales Judgment Trainer</h1>
+            <p class="subtitle">Deliberate practice under pressure. One principle at a time.</p>
+        </div>
+
+        <!-- Principle Selection Screen -->
+        <div id="principleScreen" class="card">
+            <h2>Choose Your Focus Principle</h2>
+            <p class="helper-text">Pick ONE principle to practice. Everything else can be messy. This is how skill installs.</p>
+            <div class="principle-grid" id="principleGrid"></div>
+            <button class="secondary" onclick="startRandomScenario()">Random Scenario (No Specific Focus)</button>
+        </div>
+
+        <!-- Scenario Screen -->
+        <div id="scenarioScreen" class="card hidden">
+            <h2 id="scenarioTitle"></h2>
+            <div id="focusBanner" class="focus-banner hidden">
+                <span class="focus-label">Focus: </span><span id="focusText"></span>
+            </div>
+            
+            <div class="scenario-context">
+                <h3 style="margin-bottom: 10px;">Context</h3>
+                <p id="scenarioSetup" style="margin-bottom: 15px;"></p>
+                <div id="scenarioContext"></div>
+            </div>
+
+            <div class="buyer-line">
+                <div class="buyer-line-label">Buyer says:</div>
+                <div class="buyer-quote" id="buyerLine"></div>
+            </div>
+
+            <label class="label">Your Response:</label>
+            <textarea id="userResponse" placeholder="Type what you would say in this moment..."></textarea>
+            
+            <button id="analyzeBtn" onclick="analyzeResponse()">Analyze My Response</button>
+            
+            <div id="feedbackSection" class="hidden"></div>
+        </div>
+
+        <!-- Post-Mortem Screen -->
+        <div id="postMortemScreen" class="card hidden">
+            <h2>Elite Post-Mortem (This Is Where Learning Happens)</h2>
+            <p class="helper-text">Answer these four questions honestly. If you can't, you didn't understand the scenario yet.</p>
+
+            <label class="label">1. What was the buyer actually optimizing for?</label>
+            <textarea id="pm1" placeholder="Not surface needs - what did they personally need to happen?"></textarea>
+
+            <label class="label">2. Where did leverage shift (or where could it have)?</label>
+            <textarea id="pm2" placeholder="Identify the exact moment control moved toward or away from you"></textarea>
+
+            <label class="label">3. What belief needed to change (and did it)?</label>
+            <textarea id="pm3" placeholder="What did they need to believe for the deal to progress?"></textarea>
+
+            <label class="label">4. Extract one reusable principle</label>
+            <textarea id="pm4" placeholder="Complete this: 'Next time I encounter X, I will Y because...'"></textarea>
+
+            <button class="ai-analyze" id="aiAnalyzeBtn" onclick="analyzePostMortemWithAI()">🤖 Analyze My Analysis (AI Review)</button>
+            
+            <div id="aiAnalysisSection" class="hidden"></div>
+
+            <button onclick="savePostMortem()">Save & Continue</button>
+            <button class="secondary" onclick="returnToPrinciples()">Return to Principles</button>
+        </div>
+    </div>
+
+    <script>
+        const principles = [
+            {
+                id: 'silence',
+                name: 'Strategic Silence',
+                rule: 'Wait 3 seconds after buyer hesitation before speaking',
+                why: 'Silence forces the buyer to think and reveals truth'
+            },
+            {
+                id: 'disqualify',
+                name: 'Early Disqualification',
+                rule: 'Exit when ownership is unclear after 2 questions',
+                why: 'Weak deals waste time and corrupt judgment'
+            },
+            {
+                id: 'price',
+                name: 'Never Defend Price',
+                rule: 'Reframe value, never justify cost',
+                why: 'Defending price means value was not anchored'
+            },
+            {
+                id: 'downside',
+                name: 'Surface Personal Risk',
+                rule: 'Identify what the buyer personally loses by not acting',
+                why: 'People buy to avoid loss, not gain improvement'
+            },
+            {
+                id: 'inaction',
+                name: 'Cost of Inaction',
+                rule: 'Make doing nothing more uncomfortable than changing',
+                why: 'Inaction is your real competitor'
+            },
+            {
+                id: 'ownership',
+                name: 'Ownership Mapping',
+                rule: 'Clarify who owns the downside of the decision',
+                why: 'Without ownership, there is no real sale'
+            }
+        ];
+
+        const scenarios = [
+            {
+                id: 1,
+                title: 'The Polite Time-Waster',
+                setup: 'Discovery call with mid-level manager. They seem interested, ask good questions, but keep things surface-level.',
+                buyerLine: 'This all sounds really interesting. Can you send me some materials so I can review with my team?',
+                principlesTested: ['disqualify', 'ownership'],
+                context: {
+                    role: 'Product Manager',
+                    company: 'Mid-market SaaS',
+                    pain: 'Manual reporting processes',
+                    tone: 'Friendly, non-committal'
+                },
+                eliteResponse: 'Instead of sending materials, I need to understand something first - when you say "review with the team," who specifically needs to sign off on this? And what usually happens if the manual reporting continues as-is?',
+                averageResponse: 'Absolutely! I\'ll send over our deck and a case study. Should I follow up next week?',
+                leveragePoint: 'Agreeing to send info without clarifying ownership = deal is dead',
+                realIssue: 'No personal consequence, no decision authority, no timeline',
+                elitePostMortem: {
+                    buyerOptimization: 'They were optimizing for politeness and keeping options open without commitment. Personally, they needed to appear engaged (for their manager or in case they need this later) without doing any actual work or taking risk.',
+                    leverageShift: 'Leverage died the moment I agreed to send materials. By complying with their low-commitment request, I let them defer the decision without consequence. The alternative was to clarify ownership before sharing anything.',
+                    beliefChange: 'They needed to believe that delaying has a cost - either to them personally or to the company. That belief was never installed because I never surfaced the downside of inaction.',
+                    principle: 'Next time someone asks for materials, I ask "who specifically reviews this and what happens if nothing changes?" before sending anything. Information without ownership is worthless.'
+                }
+            },
+            {
+                id: 2,
+                title: 'The Price Anchor',
+                setup: 'Mid-call, strong engagement so far. You\'ve identified a real problem.',
+                buyerLine: 'I like what I\'m hearing, but honestly your pricing seems higher than what we budgeted for this.',
+                principlesTested: ['price', 'downside'],
+                context: {
+                    role: 'Director of Operations',
+                    company: 'Manufacturing',
+                    pain: 'Compliance violations costing $50k/month',
+                    tone: 'Direct, bottom-line focused'
+                },
+                eliteResponse: 'I appreciate you bringing that up. Before we discuss pricing, help me understand - what\'s the cost if the compliance issues continue? You mentioned $50k monthly in violations.',
+                averageResponse: 'I understand budget is a concern. Let me show you our ROI calculator - most clients see payback in 6 months.',
+                leveragePoint: 'Price objection = value not anchored to their actual cost of inaction',
+                realIssue: 'They don\'t yet believe doing nothing is more expensive than your solution',
+                elitePostMortem: {
+                    buyerOptimization: 'They were optimizing for budget safety and avoiding internal scrutiny. Personally, they needed to defend the decision to finance/leadership without looking irresponsible with money.',
+                    leverageShift: 'Leverage was lost earlier in the conversation when I failed to anchor the $50k/month compliance cost to their personal accountability. The price objection was a symptom, not the cause.',
+                    beliefChange: 'They needed to believe that the ongoing cost of violations ($600k/year) makes our price look cheap by comparison. And that doing nothing makes them personally responsible for waste.',
+                    principle: 'Next time I hear a price objection, I reframe to cost of inaction: "What\'s expensive - our solution, or continuing to lose $50k monthly?" Never defend price, always contrast.'
+                }
+            },
+            {
+                id: 3,
+                title: 'The False Urgency Buyer',
+                setup: 'Inbound lead. They want to move fast, pushing for next steps.',
+                buyerLine: 'We need to solve this ASAP. Can you get me pricing and a demo scheduled this week?',
+                principlesTested: ['disqualify', 'ownership', 'silence'],
+                context: {
+                    role: 'VP of Sales',
+                    company: 'Fast-growing startup',
+                    pain: 'CRM limitations',
+                    tone: 'Rushed, aggressive'
+                },
+                eliteResponse: '[Pause] I appreciate the urgency. Before we schedule anything, what happens if this doesn\'t get solved in the timeline you\'re thinking? What breaks?',
+                averageResponse: 'Great! I can get you pricing today and have our demo team reach out. What days work best for you?',
+                leveragePoint: 'Speed without depth = fake urgency or they\'re shopping',
+                realIssue: 'Real urgency has consequences. Test if this is real or theater.',
+                elitePostMortem: {
+                    buyerOptimization: 'They were optimizing for speed, not solution quality. Personally, they needed to look like they\'re "handling it" - either to their board, their team, or themselves. Or they\'re price shopping.',
+                    leverageShift: 'Leverage is maintained by slowing down when they speed up. The pause + consequence question tests if urgency is real. If they can\'t name what breaks, the urgency is fake.',
+                    beliefChange: 'They needed to believe I won\'t just comply with their pace - that I control my process. And that speed without clarity leads to bad decisions. This belief shift separates real buyers from shoppers.',
+                    principle: 'Next time someone pushes for speed, I slow down proportionally. "Before we rush - what actually breaks if we don\'t solve this?" If they can\'t answer, I disengage or deprioritize.'
+                }
+            },
+            {
+                id: 4,
+                title: 'The Ghosting Risk',
+                setup: 'You just finished demoing the platform. Buyer seemed engaged, asked technical questions.',
+                buyerLine: 'This looks really solid. Let me discuss with my team and I\'ll get back to you.',
+                principlesTested: ['ownership', 'inaction'],
+                context: {
+                    role: 'IT Manager',
+                    company: 'Enterprise retail',
+                    pain: 'System integration issues',
+                    tone: 'Analytical, cautious'
+                },
+                eliteResponse: 'Before you go - what specific concerns do you think your team will have? And what happens if we\'re sitting here in 3 months having the same conversation?',
+                averageResponse: 'Sounds good! I\'ll send a follow-up email with the recording and some resources. When should I check back in?',
+                leveragePoint: '"Let me think about it" without next-step commitment = ghost incoming',
+                realIssue: 'Demo increased perceived complexity without anchoring ownership',
+                elitePostMortem: {
+                    buyerOptimization: 'They were optimizing for an exit without conflict. Personally, they needed space to think (or avoid thinking) without feeling pressured. The demo likely surfaced work/disruption they weren\'t ready for.',
+                    leverageShift: 'Leverage died during the demo when I showed complexity without anchoring ownership. By the end, they saw effort required but no personal upside. The "discuss with team" is a polite exit.',
+                    beliefChange: 'They needed to believe that the cost of delay (3 more months of integration pain) is worse than the effort of deciding now. That belief was never installed.',
+                    principle: 'Next time, before any demo, I anchor what happens if nothing changes in 90 days. And I get explicit next-step ownership: "If your team has concerns, when do you discuss those and what\'s the decision timeline?"'
+                }
+            },
+            {
+                id: 5,
+                title: 'The Stakeholder Shuffle',
+                setup: 'Deal progressing well. Suddenly they introduce a new requirement.',
+                buyerLine: 'I need to loop in finance before we can move forward. They\'ll want to review the contract terms.',
+                principlesTested: ['ownership', 'downside'],
+                context: {
+                    role: 'Department Head',
+                    company: 'Healthcare provider',
+                    pain: 'Patient data security gaps',
+                    tone: 'Professional, risk-averse'
+                },
+                eliteResponse: 'Of course. What typically kills deals when finance gets involved? And are you personally comfortable moving forward if finance approves?',
+                averageResponse: 'No problem! What information does finance typically need? I can prepare everything for them.',
+                leveragePoint: 'New stakeholder late = delay tactic unless you map their veto power',
+                realIssue: 'Is finance a rubber stamp or a real blocker? Your contact may not be bought in.',
+                elitePostMortem: {
+                    buyerOptimization: 'They were optimizing for diffusion of responsibility. Personally, they needed to shift decision risk away from themselves onto "finance" - whether finance is a real blocker or a convenient excuse.',
+                    leverageShift: 'Leverage exists in the question: "Are YOU comfortable moving forward if finance approves?" This tests their actual commitment. If they hesitate, finance is an excuse and they\'re not bought in.',
+                    beliefChange: 'They needed to believe they can\'t hide behind process - that I see through delay tactics. And that introducing stakeholders late without mapping veto power is a red flag I won\'t ignore.',
+                    principle: 'Next time a new stakeholder appears late, I ask two questions: (1) What kills deals when [stakeholder] gets involved? (2) Are you personally ready to move forward if they approve? Hesitation = disqualify.'
+                }
+            },
+            {
+                id: 6,
+                title: 'The Feature Comparison',
+                setup: 'Buyer is comparing you to competitors. They keep asking about specific features.',
+                buyerLine: 'Your competitor offers feature X and Y. Do you have those capabilities?',
+                principlesTested: ['price', 'downside'],
+                context: {
+                    role: 'CTO',
+                    company: 'Tech startup',
+                    pain: 'Development bottlenecks',
+                    tone: 'Technical, skeptical'
+                },
+                eliteResponse: 'I can answer that, but first - what problem are you actually trying to solve? Is it features you need, or is it reducing the 3-week deployment cycle you mentioned?',
+                averageResponse: 'Yes, we have both of those features. Let me show you how they work in our platform.',
+                leveragePoint: 'Feature comparison = they don\'t understand the real problem yet',
+                realIssue: 'They\'re in shopping mode. Need to reframe to consequence, not capabilities.',
+                elitePostMortem: {
+                    buyerOptimization: 'They were optimizing for feature parity - checking boxes to justify a decision they haven\'t actually made. Personally, they needed ammunition for a comparison spreadsheet to show their team.',
+                    leverageShift: 'Leverage is maintained by refusing to play the feature game. Reframing to consequence ("Is it features or the 3-week cycle problem?") shifts from commoditization to value.',
+                    beliefChange: 'They needed to believe that features don\'t solve problems - outcomes do. That they\'re comparing the wrong things. And that I won\'t compete on feature lists because that\'s a race to the bottom.',
+                    principle: 'Next time someone asks about competitor features, I redirect: "I can answer that, but help me understand - what problem does that feature solve for you?" Never defend features, always anchor to consequence.'
+                }
+            }
+        ];
+
+        let currentScenario = null;
+        let currentPrinciple = null;
+
+        // Initialize
+        function init() {
+            renderPrinciples();
+        }
+
+        function renderPrinciples() {
+            const grid = document.getElementById('principleGrid');
+            grid.innerHTML = '';
+            
+            principles.forEach(principle => {
+                const card = document.createElement('div');
+                card.className = 'principle-card';
+                card.onclick = () => startScenario(principle);
+                card.innerHTML = `
+                    <div class="principle-title">${principle.name}</div>
+                    <div class="principle-rule">${principle.rule}</div>
+                    <div class="principle-why">${principle.why}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function startScenario(principle = null) {
+            currentPrinciple = principle;
+            
+            // Filter scenarios by principle
+            let availableScenarios = principle 
+                ? scenarios.filter(s => s.principlesTested.includes(principle.id))
+                : scenarios;
+            
+            // Pick random scenario
+            currentScenario = availableScenarios[Math.floor(Math.random() * availableScenarios.length)];
+            
+            // Show scenario screen
+            document.getElementById('principleScreen').classList.add('hidden');
+            document.getElementById('scenarioScreen').classList.remove('hidden');
+            document.getElementById('postMortemScreen').classList.add('hidden');
+            
+            // Populate scenario
+            document.getElementById('scenarioTitle').textContent = currentScenario.title;
+            document.getElementById('scenarioSetup').textContent = currentScenario.setup;
+            document.getElementById('buyerLine').textContent = `"${currentScenario.buyerLine}"`;
+            
+            if (principle) {
+                document.getElementById('focusBanner').classList.remove('hidden');
+                document.getElementById('focusText').textContent = principle.rule;
+            } else {
+                document.getElementById('focusBanner').classList.add('hidden');
+            }
+            
+            document.getElementById('scenarioContext').innerHTML = `
+                <div style="font-size: 0.9em; color: #444;">
+                    <div><strong>Role:</strong> ${currentScenario.context.role}</div>
+                    <div><strong>Company:</strong> ${currentScenario.context.company}</div>
+                    <div><strong>Pain:</strong> ${currentScenario.context.pain}</div>
+                </div>
+            `;
+            
+            // Reset
+            document.getElementById('userResponse').value = '';
+            document.getElementById('feedbackSection').innerHTML = '';
+            document.getElementById('feedbackSection').classList.add('hidden');
+            document.getElementById('analyzeBtn').disabled = false;
+        }
+
+        function startRandomScenario() {
+            startScenario(null);
+        }
+
+        function analyzeResponse() {
+            const response = document.getElementById('userResponse').value.trim().toLowerCase();
+            
+            if (!response) return;
+            
+            // Disable button
+            document.getElementById('analyzeBtn').disabled = true;
+            
+            // Analysis signals
+            const signals = {
+                good: {
+                    asksWhy: response.includes('why') || response.includes('what happens'),
+                    surfacesConsequence: response.includes('if') && (response.includes('don\'t') || response.includes('nothing') || response.includes('doesn\'t')),
+                    slowsDown: response.includes('before') || response.includes('first'),
+                    clarifies: response.includes('who') || response.includes('specifically'),
+                    avoidsPitch: !response.includes('we offer') && !response.includes('our platform') && !response.includes('feature'),
+                    challenging: response.includes('help me understand') || response.includes('curious'),
+                    brief: response.split(' ').length < 50
+                },
+                bad: {
+                    immediateCompliance: response.includes('i\'ll send') || response.includes('absolutely') || response.includes('no problem'),
+                    defending: response.includes('because') && response.includes('we'),
+                    pitching: response.includes('we have') || response.includes('our solution'),
+                    overExplaining: response.split(' ').length > 60,
+                    seekingApproval: response.includes('does that make sense') || response.includes('sound good'),
+                    fastForward: response.includes('next week') || response.includes('follow up') || response.includes('schedule'),
+                    avoiding: !response.includes('?')
+                }
+            };
+            
+            const goodCount = Object.values(signals.good).filter(Boolean).length;
+            const badCount = Object.values(signals.bad).filter(Boolean).length;
+            
+            let grade, className, analysis;
+            
+            if (goodCount >= 4 && badCount <= 1) {
+                grade = 'ELITE';
+                className = 'feedback-elite';
+                analysis = 'Strong discipline. You resisted the urge to comply or pitch. This response maintains control.';
+            } else if (goodCount >= 2 && badCount <= 2) {
+                grade = 'DEVELOPING';
+                className = 'feedback-developing';
+                analysis = 'Decent instincts, but mixed signals. You\'re not fully committing to the elite framework yet.';
+            } else {
+                grade = 'AVERAGE';
+                className = 'feedback-average';
+                analysis = 'This response gives away control. You\'re either pitching, complying, or seeking approval.';
+            }
+            
+            // Build feedback HTML
+            let feedbackHTML = `
+                <div class="feedback-box ${className}">
+                    <div class="feedback-grade">${grade}</div>
+                    <div>${analysis}</div>
+                </div>
+            `;
+            
+            // Detailed feedback
+            if (signals.bad.immediateCompliance) {
+                feedbackHTML += '<div class="feedback-detail feedback-error">❌ IMMEDIATE COMPLIANCE: You agreed to their request without testing it. This surrenders leverage.</div>';
+            }
+            if (signals.bad.defending) {
+                feedbackHTML += '<div class="feedback-detail feedback-error">❌ DEFENDING: You justified instead of reframing. Defending = weak frame.</div>';
+            }
+            if (signals.bad.pitching) {
+                feedbackHTML += '<div class="feedback-detail feedback-error">❌ PITCHING: You went into feature/solution mode before understanding the real problem.</div>';
+            }
+            if (signals.bad.avoiding) {
+                feedbackHTML += '<div class="feedback-detail feedback-error">❌ NO QUESTION: Elite responses almost always contain questions that test or clarify.</div>';
+            }
+            if (signals.bad.overExplaining) {
+                feedbackHTML += '<div class="feedback-detail feedback-error">❌ OVER-EXPLAINING: Too many words = trying too hard. Elite reps use fewer words with more weight.</div>';
+            }
+            
+            if (signals.good.asksWhy) {
+                feedbackHTML += '<div class="feedback-detail feedback-success">✅ DIAGNOSTIC QUESTION: You asked why or what happens - this surfaces real incentives.</div>';
+            }
+            if (signals.good.surfacesConsequence) {
+                feedbackHTML += '<div class="feedback-detail feedback-success">✅ CONSEQUENCE FRAMING: You highlighted the cost of inaction. This is elite.</div>';
+            }
+            if (signals.good.slowsDown) {
+                feedbackHTML += '<div class="feedback-detail feedback-success">✅ PACING CONTROL: You slowed down instead of rushing to next steps.</div>';
+            }
+            if (signals.good.brief) {
+                feedbackHTML += '<div class="feedback-detail feedback-success">✅ BREVITY: Concise responses maintain tension and force the buyer to fill space.</div>';
+            }
+            
+            // Comparisons
+            feedbackHTML += `
+                <div class="comparison-grid">
+                    <div class="comparison-box comparison-average">
+                        <div class="comparison-title">❌ Average Response:</div>
+                        <div class="comparison-text">"${currentScenario.averageResponse}"</div>
+                    </div>
+                    <div class="comparison-box comparison-elite">
+                        <div class="comparison-title">✅ Elite Response:</div>
+                        <div class="comparison-text">"${currentScenario.eliteResponse}"</div>
+                    </div>
+                </div>
+            `;
+            
+            // Insights
+            feedbackHTML += `
+                <div class="insight-box">
+                    <div class="insight-label">Leverage Point:</div>
+                    <div class="insight-text">${currentScenario.leveragePoint}</div>
+                </div>
+                <div class="insight-box">
+                    <div class="insight-label">Real Issue:</div>
+                    <div class="insight-text">${currentScenario.realIssue}</div>
+                </div>
+            `;
+            
+            feedbackHTML += '<button onclick="showPostMortem()">Continue to Post-Mortem</button>';
+            
+            document.getElementById('feedbackSection').innerHTML = feedbackHTML;
+            document.getElementById('feedbackSection').classList.remove('hidden');
+        }
+
+        function showPostMortem() {
+            document.getElementById('scenarioScreen').classList.add('hidden');
+            document.getElementById('postMortemScreen').classList.remove('hidden');
+            
+            // Clear post-mortem fields and AI analysis
+            document.getElementById('pm1').value = '';
+            document.getElementById('pm2').value = '';
+            document.getElementById('pm3').value = '';
+            document.getElementById('pm4').value = '';
+            document.getElementById('aiAnalysisSection').innerHTML = '';
+            document.getElementById('aiAnalysisSection').classList.add('hidden');
+            document.getElementById('aiAnalyzeBtn').disabled = false;
+        }
+
+        async function analyzePostMortemWithAI() {
+            // Get user's answers
+            const userAnswers = {
+                q1: document.getElementById('pm1').value.trim(),
+                q2: document.getElementById('pm2').value.trim(),
+                q3: document.getElementById('pm3').value.trim(),
+                q4: document.getElementById('pm4').value.trim()
+            };
+
+            // Check if all fields are filled
+            if (!userAnswers.q1 || !userAnswers.q2 || !userAnswers.q3 || !userAnswers.q4) {
+                alert('Please answer all 4 questions before requesting AI analysis.');
+                return;
+            }
+
+            // Disable button and show loading
+            const btn = document.getElementById('aiAnalyzeBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span> Analyzing your thinking...';
+
+            const analysisSection = document.getElementById('aiAnalysisSection');
+            analysisSection.classList.remove('hidden');
+            analysisSection.innerHTML = `
+                <div class="ai-analysis-box">
+                    <div class="ai-analysis-header">
+                        <span class="loading-spinner"></span>
+                        AI is analyzing your post-mortem...
+                    </div>
+                </div>
+            `;
+
+            try {
+                // Build the prompt for Claude
+                const prompt = `You are an elite sales coach analyzing a sales trainee's post-mortem analysis. Your job is to evaluate their thinking and provide specific, actionable feedback.
+
+SCENARIO CONTEXT:
+Title: ${currentScenario.title}
+Setup: ${currentScenario.setup}
+Buyer said: "${currentScenario.buyerLine}"
+
+THE TRAINEE'S POST-MORTEM ANSWERS:
+
+1. What was the buyer actually optimizing for?
+${userAnswers.q1}
+
+2. Where did leverage shift (or where could it have)?
+${userAnswers.q2}
+
+3. What belief needed to change (and did it)?
+${userAnswers.q3}
+
+4. Extract one reusable principle
+${userAnswers.q4}
+
+ELITE BENCHMARK (What a top performer would say):
+1. ${currentScenario.elitePostMortem.buyerOptimization}
+2. ${currentScenario.elitePostMortem.leverageShift}
+3. ${currentScenario.elitePostMortem.beliefChange}
+4. ${currentScenario.elitePostMortem.principle}
+
+YOUR TASK:
+Analyze the trainee's answers and provide structured feedback in 4 sections:
+
+1. WHAT YOU GOT RIGHT
+- List specific insights they captured well
+- Point out good analytical instincts
+- Be specific about what they saw that matters
+
+2. WHAT YOU MISSED
+- Identify blind spots in their analysis
+- Point out where they stayed surface-level
+- Highlight patterns they didn't recognize
+- Be direct but constructive
+
+3. HOW TO SHARPEN IT
+- Give specific techniques to deepen their analysis
+- Suggest questions they should have asked themselves
+- Provide frameworks for better pattern recognition
+
+4. THE GAP
+- Summarize the key difference between their thinking and elite thinking
+- Be brutally honest but motivating
+- Focus on the one thing that would most improve their judgment
+
+Keep each section focused and actionable. Use direct language. No fluff.`;
+
+                // Call Claude API
+                const response = await fetch("https://api.anthropic.com/v1/messages", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        model: "claude-sonnet-4-20250514",
+                        max_tokens: 2000,
+                        messages: [
+                            { role: "user", content: prompt }
+                        ],
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.content && data.content[0] && data.content[0].text) {
+                    const aiAnalysis = data.content[0].text;
+                    
+                    // Parse the sections (basic parsing - assumes AI follows format)
+                    const sections = parseAIAnalysis(aiAnalysis);
+                    
+                    // Display the analysis
+                    displayAIAnalysis(sections);
+                } else {
+                    throw new Error('Invalid response from AI');
+                }
+
+            } catch (error) {
+                console.error('AI Analysis Error:', error);
+                analysisSection.innerHTML = `
+                    <div class="ai-analysis-box" style="background: #fee2e2; border-color: #dc2626;">
+                        <div style="color: #991b1b; font-weight: bold;">❌ Analysis Failed</div>
+                        <div style="color: #7f1d1d; margin-top: 10px;">
+                            Unable to connect to AI analysis. Please try again or continue with the standard comparison.
+                        </div>
+                    </div>
+                `;
+            } finally {
+                // Re-enable button
+                btn.disabled = false;
+                btn.innerHTML = '🤖 Analyze My Analysis (AI Review)';
+            }
+        }
+
+        function parseAIAnalysis(text) {
+            // Simple parsing - split by numbered sections
+            const sections = {
+                gotRight: '',
+                missed: '',
+                sharpen: '',
+                gap: ''
+            };
+
+            // Try to extract sections based on common patterns
+            const rightMatch = text.match(/1\.\s*WHAT YOU GOT RIGHT[:\s]*([\s\S]*?)(?=2\.|$)/i);
+            const missedMatch = text.match(/2\.\s*WHAT YOU MISSED[:\s]*([\s\S]*?)(?=3\.|$)/i);
+            const sharpenMatch = text.match(/3\.\s*HOW TO SHARPEN IT[:\s]*([\s\S]*?)(?=4\.|$)/i);
+            const gapMatch = text.match(/4\.\s*THE GAP[:\s]*([\s\S]*?)$/i);
+
+            if (rightMatch) sections.gotRight = rightMatch[1].trim();
+            if (missedMatch) sections.missed = missedMatch[1].trim();
+            if (sharpenMatch) sections.sharpen = sharpenMatch[1].trim();
+            if (gapMatch) sections.gap = gapMatch[1].trim();
+
+            // If parsing fails, return full text in first section
+            if (!sections.gotRight && !sections.missed) {
+                sections.gotRight = text;
+            }
+
+            return sections;
+        }
+
+        function displayAIAnalysis(sections) {
+            const analysisSection = document.getElementById('aiAnalysisSection');
+            
+            let html = '<div class="ai-analysis-box">';
+            html += '<div class="ai-analysis-header">🤖 AI Analysis of Your Thinking</div>';
+
+            if (sections.gotRight) {
+                html += `
+                    <div class="ai-section">
+                        <div class="ai-section-title">✅ What You Got Right</div>
+                        <div class="ai-section-content">${formatText(sections.gotRight)}</div>
+                    </div>
+                `;
+            }
+
+            if (sections.missed) {
+                html += `
+                    <div class="ai-section">
+                        <div class="ai-section-title">🎯 What You Missed</div>
+                        <div class="ai-section-content">${formatText(sections.missed)}</div>
+                    </div>
+                `;
+            }
+
+            if (sections.sharpen) {
+                html += `
+                    <div class="ai-section">
+                        <div class="ai-section-title">⚡ How to Sharpen It</div>
+                        <div class="ai-section-content">${formatText(sections.sharpen)}</div>
+                    </div>
+                `;
+            }
+
+            if (sections.gap) {
+                html += `
+                    <div class="ai-section" style="background: #fef3c7; border-color: #eab308;">
+                        <div class="ai-section-title" style="color: #854d0e;">🔥 The Gap</div>
+                        <div class="ai-section-content">${formatText(sections.gap)}</div>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+            
+            analysisSection.innerHTML = html;
+        }
+
+        function formatText(text) {
+            // Convert line breaks to paragraphs
+            return text.split('\n').filter(line => line.trim()).map(line => {
+                line = line.trim();
+                // Bold any text starting with - or •
+                if (line.startsWith('-') || line.startsWith('•')) {
+                    return `<div style="margin: 8px 0 8px 20px;">${line}</div>`;
+                }
+                return `<div style="margin: 8px 0;">${line}</div>`;
+            }).join('');
+        }
+
+        function savePostMortem() {
+            // Get user's post-mortem
+            const userPostMortem = {
+                scenario: currentScenario.title,
+                buyerOptimization: document.getElementById('pm1').value.trim(),
+                leverageShift: document.getElementById('pm2').value.trim(),
+                beliefChange: document.getElementById('pm3').value.trim(),
+                principle: document.getElementById('pm4').value.trim()
+            };
+            
+            // Check if all fields are filled
+            const allFilled = userPostMortem.buyerOptimization && 
+                            userPostMortem.leverageShift && 
+                            userPostMortem.beliefChange && 
+                            userPostMortem.principle;
+            
+            if (!allFilled) {
+                alert('Please answer all 4 questions before continuing.');
+                return;
+            }
+            
+            // Show elite comparison
+            showPostMortemGrade(userPostMortem);
+        }
+        
+        function showPostMortemGrade(userPostMortem) {
+            // Build comparison HTML
+            let gradeHTML = `
+                <div class="card">
+                    <h2>Elite Post-Mortem Analysis</h2>
+                    <p class="helper-text" style="margin-bottom: 30px;">Compare your thinking to elite-level analysis. The goal is to see what you missed.</p>
+            `;
+            
+            // Question 1
+            gradeHTML += `
+                <div style="margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                    <div style="font-weight: bold; color: #1a1a1a; margin-bottom: 15px;">1. What was the buyer actually optimizing for?</div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-weight: 600; color: #666; margin-bottom: 8px;">Your Answer:</div>
+                        <div style="padding: 12px; background: white; border-radius: 6px; border-left: 3px solid #cbd5e1;">
+                            ${userPostMortem.buyerOptimization || '<em style="color: #999;">No answer provided</em>'}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div style="font-weight: 600; color: #16a34a; margin-bottom: 8px;">✅ Elite Answer:</div>
+                        <div style="padding: 12px; background: #dcfce7; border-radius: 6px; border-left: 3px solid #16a34a;">
+                            ${currentScenario.elitePostMortem.buyerOptimization}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Question 2
+            gradeHTML += `
+                <div style="margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                    <div style="font-weight: bold; color: #1a1a1a; margin-bottom: 15px;">2. Where did leverage shift (or where could it have)?</div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-weight: 600; color: #666; margin-bottom: 8px;">Your Answer:</div>
+                        <div style="padding: 12px; background: white; border-radius: 6px; border-left: 3px solid #cbd5e1;">
+                            ${userPostMortem.leverageShift || '<em style="color: #999;">No answer provided</em>'}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div style="font-weight: 600; color: #16a34a; margin-bottom: 8px;">✅ Elite Answer:</div>
+                        <div style="padding: 12px; background: #dcfce7; border-radius: 6px; border-left: 3px solid #16a34a;">
+                            ${currentScenario.elitePostMortem.leverageShift}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Question 3
+            gradeHTML += `
+                <div style="margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                    <div style="font-weight: bold; color: #1a1a1a; margin-bottom: 15px;">3. What belief needed to change (and did it)?</div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-weight: 600; color: #666; margin-bottom: 8px;">Your Answer:</div>
+                        <div style="padding: 12px; background: white; border-radius: 6px; border-left: 3px solid #cbd5e1;">
+                            ${userPostMortem.beliefChange || '<em style="color: #999;">No answer provided</em>'}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div style="font-weight: 600; color: #16a34a; margin-bottom: 8px;">✅ Elite Answer:</div>
+                        <div style="padding: 12px; background: #dcfce7; border-radius: 6px; border-left: 3px solid #16a34a;">
+                            ${currentScenario.elitePostMortem.beliefChange}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Question 4
+            gradeHTML += `
+                <div style="margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                    <div style="font-weight: bold; color: #1a1a1a; margin-bottom: 15px;">4. Extract one reusable principle</div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-weight: 600; color: #666; margin-bottom: 8px;">Your Answer:</div>
+                        <div style="padding: 12px; background: white; border-radius: 6px; border-left: 3px solid #cbd5e1;">
+                            ${userPostMortem.principle || '<em style="color: #999;">No answer provided</em>'}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div style="font-weight: 600; color: #16a34a; margin-bottom: 8px;">✅ Elite Answer:</div>
+                        <div style="padding: 12px; background: #dcfce7; border-radius: 6px; border-left: 3px solid #16a34a;">
+                            ${currentScenario.elitePostMortem.principle}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Key insight
+            gradeHTML += `
+                <div style="padding: 20px; background: #fef3c7; border-radius: 8px; border-left: 4px solid #eab308; margin-bottom: 20px;">
+                    <div style="font-weight: bold; color: #854d0e; margin-bottom: 10px;">📊 What to Notice:</div>
+                    <div style="color: #713f12;">
+                        Elite analysis focuses on personal incentives, power dynamics, and precise moments of leverage shift. 
+                        If your answers were vague, blamed timing, or missed the buyer's personal risk - that's the gap to close.
+                    </div>
+                </div>
+            `;
+            
+            gradeHTML += `
+                <button onclick="startScenario(currentPrinciple)" style="margin-bottom: 10px;">Next Scenario (Same Principle)</button>
+                <button class="secondary" onclick="returnToPrinciples()">Choose Different Principle</button>
+            `;
+            
+            gradeHTML += `</div>`;
+            
+            // Replace post-mortem screen with grade screen
+            document.getElementById('postMortemScreen').innerHTML = gradeHTML;
+        }
+
+        function returnToPrinciples() {
+            document.getElementById('scenarioScreen').classList.add('hidden');
+            document.getElementById('postMortemScreen').classList.add('hidden');
+            document.getElementById('principleScreen').classList.remove('hidden');
+            currentScenario = null;
+            currentPrinciple = null;
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
